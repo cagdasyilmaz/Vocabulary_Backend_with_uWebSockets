@@ -190,6 +190,4 @@ namespace Vocabulary
             t->join();
         });
     }
-
-
 }
