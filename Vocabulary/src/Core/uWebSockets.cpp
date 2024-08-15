@@ -41,11 +41,12 @@ namespace Vocabulary
         auto queryParams = parseQueryString(query);
 
         if(!query.empty()) {
+            std::string ip_address = std::string(req->getHeader("x-real-ip"));
             std::string username = queryParams["username"];
             std::string type = queryParams["type"];
 
-            VOCABULARY_CLIENT_INFO("A GET message is received for URI {}, username: {}, type: {}.",
-                                   req->getUrl(), username, type);
+            VOCABULARY_CLIENT_INFO("A GET message is received from IP address: {}, for URI {}, username: {}, type: {}.",
+                                   ip_address, req->getUrl(), username, type);
 
             if(mapStringToVocabularyType.count(type)) {
                 VocabularyType vocabularyType = mapStringToVocabularyType[type];
@@ -108,14 +109,15 @@ namespace Vocabulary
                 json post_data = json::parse(buffer);
 
                 // Extract the individual fields
+                std::string ip_address = std::string(req->getHeader("x-real-ip"));
                 std::string username = post_data.at("username").get<std::string>();
                 std::string type = post_data.at("type").get<std::string>();
                 std::string option = post_data.at("mode").get<std::string>();
                 std::size_t index = post_data.at("index").get<std::size_t>();
 
                 // Log the received data
-                VOCABULARY_CLIENT_INFO("A POST message is received for URI: {}, username: {}, type: {}, mode: {}, index: {}",
-                                       req->getUrl(), username, type, option, index);
+                VOCABULARY_CLIENT_INFO("A POST message is received from IP address: {}, for URI: {}, username: {}, type: {}, mode: {}, index: {}",
+                                       ip_address, req->getUrl(), username, type, option, index);
 
                 VocabularyType vocabularyType = mapStringToVocabularyType[type];
 
